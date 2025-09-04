@@ -1,4 +1,5 @@
 ﻿using DndCharacterSimulator.CharacterGenerator;
+using DndCharacterSimulator.Models;
 using DndCharacterSimulator.Statistics;
 
 namespace DndCharacterSimulator
@@ -54,6 +55,12 @@ namespace DndCharacterSimulator
             Console.WriteLine(string.Join(',', childStatLine));
 
             Console.ReadKey();
+
+            // Small city with fullplate production test
+            var fullPlate = new Item() { Name = "Full Plate", BasePrice = 1500, ProductionCost = 1 };
+
+            var populationGroup = new PopulationGroup() { Individuals = 100, PopulationStatLine = new StatLine(new int[] { 15, 14, 13, 12, 10, 8 }) };
+
         }
     }
 }

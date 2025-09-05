@@ -58,7 +58,7 @@ namespace DndCharacterSimulator
 
             // Small city with fullplate production test
             var fullPlate = new Item() { Name = "Full Plate", BasePrice = 1500, ProductionCost = 1 };
-
+            var smith = new Building() { Name = "Smith", BaseProduction = 10, ProductionItems = new List<Item>() { fullPlate } };
             var populationGroup = new PopulationGroup() { Individuals = 100, PopulationStatLine = new StatLine(new int[] { 15, 14, 13, 12, 10, 8 }) };
 
         }

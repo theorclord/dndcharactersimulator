@@ -27,5 +27,6 @@
         public int[] GetStatLineArray()
         {
             return new int[] { Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma };
+        }
     }
 }

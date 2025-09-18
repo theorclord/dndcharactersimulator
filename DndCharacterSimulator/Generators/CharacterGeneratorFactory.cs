@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DndCharacterSimulator.CharacterGenerator
+namespace DndCharacterSimulator.Generators
 {
     internal class CharacterGeneratorFactory
     {
@@ -16,8 +16,9 @@ namespace DndCharacterSimulator.CharacterGenerator
         /// <param name="minimumStat">The minimum stat which each stat must have</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public List<int> GenerateStatLine(int statSum, List<int> probabilityDistribution, int minimumStat)
+        public List<int> GenerateStatLine(int statSum, List<int> probabilityDistribution, int minimumStat, int maximumStat)
         {
+            var workingProbabilityDistribution = new List<int>(probabilityDistribution);
             var minimunStatSum = minimumStat * 6;
             // check that the statsum is larger than the minimum array
             if (minimunStatSum > statSum)
@@ -31,7 +32,7 @@ namespace DndCharacterSimulator.CharacterGenerator
 
 
             // populate the rest of the stats
-            var probabilitySum = probabilityDistribution.Sum();
+            var probabilitySum = workingProbabilityDistribution.Sum();
             var statsToAssign = statSum - minimunStatSum;
 
             // TODO add code for checking for maximum stat limit. 
@@ -44,10 +45,16 @@ namespace DndCharacterSimulator.CharacterGenerator
                 var currentProbabilityThreshold = 0;
                 for (var j = 0; j < statLine.Count; j++)
                 {
-                    currentProbabilityThreshold += probabilityDistribution[j];
+                    currentProbabilityThreshold += workingProbabilityDistribution[j];
                     if (statProbablilty <= currentProbabilityThreshold)
                     {
                         statLine[j] += 1;
+                        if (statLine[j] == maximumStat)
+                        {
+                            //TODO Should be done to a copy, or by the retrieved statLine
+                            probabilitySum -= workingProbabilityDistribution[j];
+                            workingProbabilityDistribution[j] = 0;
+                        }
                         break;
                     }
                 }

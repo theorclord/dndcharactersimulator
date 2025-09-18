@@ -1,4 +1,4 @@
-﻿using DndCharacterSimulator.CharacterGenerator;
+﻿using DndCharacterSimulator.Generators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +40,7 @@ namespace DndCharacterSimulator.Statistics
             var averageStatLine = new List<int>() { 0, 0, 0, 0, 0, 0 };
             for (var i = 0; i < sampleSize; i++)
             {
-                var generatedLine = generator.GenerateStatLine(72, probabilityDistribution, 8);
+                var generatedLine = generator.GenerateStatLine(72, probabilityDistribution, 8, 18);
                 for (var j = 0; j < generatedLine.Count; j++)
                 {
                     averageStatLine[j] += generatedLine[j];

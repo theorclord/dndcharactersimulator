@@ -11,5 +11,11 @@ namespace DndCharacterSimulator.Models
         public List<PopulationGroup> PopulationGroups {  get; set; }
         public List<Building> Buildings { get; set; }
         public int BaseProduction { get; set; }
+
+        public City() 
+        {
+            PopulationGroups = new List<PopulationGroup>();
+            Buildings = new List<Building>();
+        }
     }
 }

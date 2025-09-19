@@ -1,9 +1,4 @@
 ﻿using DndCharacterSimulator.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DndCharacterSimulator.Generators
 {
@@ -34,6 +29,31 @@ namespace DndCharacterSimulator.Generators
 
             var city = new City();
             city.PopulationGroups.AddRange(populationGroups);
+            
+            // As the distribution might not result in complete integer solution
+            // Add remaining individuals to the population groups, to achieve saturation
+            var currentCityPopulation = city.Population;
+            if (currentCityPopulation < populationCount)
+            {
+                var difference = populationCount - currentCityPopulation;
+                var random = new Random();
+                for(var i = 0; i< difference; i++)
+                {
+                    // Allocate based on current number of individuals
+                    var distAllocation = random.Next(city.Population) + 1;
+
+                    var currentProbabilityThreshold = 0;
+                    for (var j = 0; j < city.PopulationGroups.Count; j++)
+                    {
+                        currentProbabilityThreshold += city.PopulationGroups[j].Individuals;
+                        if (distAllocation <= currentProbabilityThreshold)
+                        {
+                            city.PopulationGroups[j].Individuals += 1;
+                            break;
+                        }
+                    }
+                }
+            }
 
             return city;
         }

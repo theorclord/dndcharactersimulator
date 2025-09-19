@@ -10,51 +10,11 @@ namespace DndCharacterSimulator
         {
             Console.WriteLine("Hello, World!");
 
-            ProbabilityChecker.SimulateProbabilityDistributionSummation();
-            ProbabilityChecker.SimulateProbabilityDistributionExponential();
+            ProbabilityCheckerGoup();
 
-            Console.ReadKey();
+            CharacterGeneratorTest();
 
-            var characterGenerator = new CharacterGeneratorFactory();
-
-            // Test of stat line generator
-            var standardArray = new List<int> { 15, 14, 13, 12, 10, 8 };
-            var standardStatSum = standardArray.Sum();
-            for (var i = 0; i < 4; i++)
-            {
-                var statLine = characterGenerator.GenerateStatLine(standardStatSum, standardArray, 4, 18);
-
-                Console.WriteLine("StatLine:");
-                Console.WriteLine(string.Join(',', statLine));
-                Console.WriteLine("StatSum:");
-                Console.WriteLine(statLine.Sum());
-            }
-
-            // This might give an indication of needing a greate emphasis on stat difference
-            var testProbility = new List<int> { 100, 20, 100, 20, 20, 50 };
-            var probAbilityTestLine = characterGenerator.GenerateStatLine(standardStatSum, testProbility, 8, 18);
-
-            Console.WriteLine("StatLine:");
-            Console.WriteLine(string.Join(',', probAbilityTestLine));
-            Console.WriteLine("StatSum:");
-            Console.WriteLine(probAbilityTestLine.Sum());
-
-            // Test of probability distribution
-            var statLine1 = characterGenerator.GenerateStatLine(standardStatSum, standardArray, 8, 18);
-            var statLine2 = characterGenerator.GenerateStatLine(standardStatSum, standardArray, 8, 18);
-            Console.WriteLine("StatLine1:");
-            Console.WriteLine(string.Join(',', statLine1));
-            Console.WriteLine("StatLine2:");
-            Console.WriteLine(string.Join(',', statLine2));
-            var probabilityDistribution = characterGenerator.GenerateProbabilityDistributionStandardSummation(statLine1, statLine2);
-            Console.WriteLine("Probability Distribution:");
-            Console.WriteLine(string.Join(",", probabilityDistribution));
-
-            var childStatLine = characterGenerator.GenerateStatLine(standardStatSum, probabilityDistribution, 8, 18);
-            Console.WriteLine("StatLine:");
-            Console.WriteLine(string.Join(',', childStatLine));
-
-            Console.ReadKey();
+            ProbabilityBiasTest();
 
             // Small city with fullplate production test
             var fullPlate = new Item() { Name = "Full Plate", BasePrice = 1500, ProductionCost = 1 };
@@ -79,6 +39,65 @@ namespace DndCharacterSimulator
                 Console.WriteLine($"Race: {raceGroup.RaceType}, {raceGroup.Individuals} ");
             }
             Console.WriteLine(raceSum);
+
+            Console.ReadKey();
         }
+
+        private static void ProbabilityCheckerGoup()
+        {
+            ProbabilityChecker.SimulateProbabilityDistributionSummation();
+        }
+
+        private static void CharacterGeneratorTest()
+        {
+            var characterGenerator = new CharacterGeneratorFactory();
+
+            // Test of stat line generator
+            var standardArray = new List<int> { 15, 14, 13, 12, 10, 8 };
+            var standardStatSum = standardArray.Sum();
+            for (var i = 0; i < 4; i++)
+            {
+                var statLine = characterGenerator.GenerateStatLine(standardStatSum, standardArray, 4, 18);
+
+                Console.WriteLine("StatLine:");
+                Console.WriteLine(string.Join(',', statLine.GetStatLineArray()));
+                Console.WriteLine("StatSum:");
+                Console.WriteLine(statLine.GetStatLineArray().Sum());
+            }
+        }
+
+        private static void ProbabilityBiasTest()
+        {
+            var characterGenerator = new CharacterGeneratorFactory();
+
+            var standardArray = new List<int> { 15, 14, 13, 12, 10, 8 };
+            var standardStatSum = standardArray.Sum();
+
+            // This might give an indication of needing a greate emphasis on stat difference
+            var testProbility = new List<int> { 100, 20, 100, 20, 20, 50 };
+            var probAbilityTestLine = characterGenerator.GenerateStatLine(standardStatSum, testProbility, 8, 18);
+
+            Console.WriteLine("StatLine:");
+            Console.WriteLine(string.Join(',', probAbilityTestLine.GetStatLineArray()));
+            Console.WriteLine("StatSum:");
+            Console.WriteLine(probAbilityTestLine.GetStatLineArray().Sum());
+
+            // Test of probability distribution
+            var statLine1 = characterGenerator.GenerateStatLine(standardStatSum, standardArray, 8, 18);
+            var statLine2 = characterGenerator.GenerateStatLine(standardStatSum, standardArray, 8, 18);
+            Console.WriteLine("StatLine1:");
+            Console.WriteLine(string.Join(',', statLine1.GetStatLineArray()));
+            Console.WriteLine("StatLine2:");
+            Console.WriteLine(string.Join(',', statLine2.GetStatLineArray()));
+            var probabilityDistribution = characterGenerator.GenerateProbabilityDistributionPolynomial(statLine1.GetStatLineArray(), statLine2.GetStatLineArray());
+            Console.WriteLine("Probability Distribution:");
+            Console.WriteLine(string.Join(",", probabilityDistribution));
+
+            var childStatLine = characterGenerator.GenerateStatLine(standardStatSum, probabilityDistribution, 8, 18);
+            Console.WriteLine("StatLine:");
+            Console.WriteLine(string.Join(',', childStatLine.GetStatLineArray()));
+        }
+
+
     }
 }

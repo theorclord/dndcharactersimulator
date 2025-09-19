@@ -12,6 +12,8 @@ namespace DndCharacterSimulator.Models
         public List<Building> Buildings { get; set; }
         public int BaseProduction { get; set; }
 
+        public int Population { get { return PopulationGroups.Sum(x => x.Individuals); } }
+
         public City() 
         {
             PopulationGroups = new List<PopulationGroup>();

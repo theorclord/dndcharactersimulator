@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DndCharacterSimulator.Models;
 
 namespace DndCharacterSimulator.Generators
 {
@@ -16,7 +12,7 @@ namespace DndCharacterSimulator.Generators
         /// <param name="minimumStat">The minimum stat which each stat must have</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public List<int> GenerateStatLine(int statSum, List<int> probabilityDistribution, int minimumStat, int maximumStat)
+        public StatLine GenerateStatLine(int statSum, List<int> probabilityDistribution, int minimumStat, int maximumStat)
         {
             var workingProbabilityDistribution = new List<int>(probabilityDistribution);
             var minimunStatSum = minimumStat * 6;
@@ -27,31 +23,28 @@ namespace DndCharacterSimulator.Generators
             }
 
             // Create the stat line and set minium stat
-            var statLine = new List<int>(6);
-            for (var i = 0; i < 6; i++) { statLine.Add(minimumStat); }
+            var statLine = new int[6];
+            for (var i = 0; i < 6; i++) { statLine[i] = minimumStat; }
 
 
             // populate the rest of the stats
             var probabilitySum = workingProbabilityDistribution.Sum();
             var statsToAssign = statSum - minimunStatSum;
 
-            // TODO add code for checking for maximum stat limit. 
-            // EG, if 18 is the max, do reroll with the stat over 18 probability being set to 0
-
             var random = new Random();
             for (var i = 0; i < statsToAssign; i++)
             {
                 var statProbablilty = random.Next(probabilitySum)+1;
                 var currentProbabilityThreshold = 0;
-                for (var j = 0; j < statLine.Count; j++)
+                for (var j = 0; j < statLine.Length; j++)
                 {
                     currentProbabilityThreshold += workingProbabilityDistribution[j];
                     if (statProbablilty <= currentProbabilityThreshold)
                     {
                         statLine[j] += 1;
+                        // If maximum stat is reached, exclude stat from assignment
                         if (statLine[j] == maximumStat)
                         {
-                            //TODO Should be done to a copy, or by the retrieved statLine
                             probabilitySum -= workingProbabilityDistribution[j];
                             workingProbabilityDistribution[j] = 0;
                         }
@@ -60,47 +53,42 @@ namespace DndCharacterSimulator.Generators
                 }
             }
 
-            return statLine;
+            return new StatLine(statLine);
         }
 
-        public List<int> GenerateProbabilityDistributionStandardSummation(List<int> statLine1, List<int> statLine2)
+        /// <summary>
+        /// Using two statlines, generate a distribution, where the weight of each individual stat influence the outcome via polynomial strength
+        /// </summary>
+        /// <param name="statLine1"></param>
+        /// <param name="statLine2"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public List<int> GenerateProbabilityDistributionPolynomial(int[] statLine1, int[] statLine2)
         {
-            if (statLine1.Count != statLine2.Count)
+            if (statLine1.Length != statLine2.Length)
             {
                 throw new Exception("The statline lenghts does not match");
             }
 
             var probabilityDistribution = new List<int>();
-            for (var i = 0; i < statLine1.Count; i++)
+            for (var i = 0; i < statLine1.Length; i++)
             {
-                var parent1Summation = statLine1[i] * (statLine1[i] + 1);
-                var parent2Summation = statLine2[i] * (statLine2[i] + 1);
-                var summationValue = parent1Summation + parent2Summation;
+                var parent1Summation = Math.Pow(statLine1[i], 3);
+                var parent2Summation = Math.Pow(statLine2[i], 3);
+                var summationValue = (int)parent1Summation + (int)parent2Summation;
                 probabilityDistribution.Add(summationValue);
             }
 
             return probabilityDistribution;
         }
 
-        public List<int> GenerateProbabilityDistributionExponential(List<int> statLine1, List<int> statLine2)
-        {
-            if (statLine1.Count != statLine2.Count)
-            {
-                throw new Exception("The statline lenghts does not match");
-            }
-
-            var probabilityDistribution = new List<int>();
-            for (var i = 0; i < statLine1.Count; i++)
-            {
-                var parent1Exponential = (int) Math.Pow(2, statLine1[i]);
-                var parent2Exponential = (int) Math.Pow(2, statLine2[i]);
-                var summationValue = parent1Exponential + parent2Exponential;
-                probabilityDistribution.Add(summationValue);
-            }
-
-            return probabilityDistribution;
-        }
-
+        /// <summary>
+        /// TODO still not tested. Use two statlines to create a new one
+        /// </summary>
+        /// <param name="statLine1"></param>
+        /// <param name="statLine2"></param>
+        /// <param name="statSum"></param>
+        /// <returns></returns>
         public List<int> GenerateStatLineChromosone(List<int> statLine1, List<int> statLine2, int statSum)
         {
             var childStatLine = new List<int>();
@@ -119,7 +107,6 @@ namespace DndCharacterSimulator.Generators
                 {
                     childStatLine.Add(statLine2[i]);
                 }
-                
             }
 
             return childStatLine;

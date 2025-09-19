@@ -14,20 +14,9 @@ namespace DndCharacterSimulator.Statistics
         {
             var generator = new CharacterGeneratorFactory();
 
-            var initParentStatBasic = new List<int>() { 15, 14, 13, 12, 10, 8 };
+            var initParentStatBasic = new int[] { 15, 14, 13, 12, 10, 8 };
 
-            var probabilityDistribution = generator.GenerateProbabilityDistributionStandardSummation(initParentStatBasic,initParentStatBasic);
-
-            PrintStatisticResult(generator, probabilityDistribution);
-        }
-
-        public static void SimulateProbabilityDistributionExponential()
-        {
-            var generator = new CharacterGeneratorFactory();
-
-            var initParentStatBasic = new List<int>() { 15, 14, 13, 12, 10, 8 };
-
-            var probabilityDistribution = generator.GenerateProbabilityDistributionExponential(initParentStatBasic, initParentStatBasic);
+            var probabilityDistribution = generator.GenerateProbabilityDistributionPolynomial(initParentStatBasic,initParentStatBasic);
 
             PrintStatisticResult(generator, probabilityDistribution);
         }
@@ -41,12 +30,12 @@ namespace DndCharacterSimulator.Statistics
             for (var i = 0; i < sampleSize; i++)
             {
                 var generatedLine = generator.GenerateStatLine(72, probabilityDistribution, 8, 18);
-                for (var j = 0; j < generatedLine.Count; j++)
+                for (var j = 0; j < generatedLine.GetStatLineArray().Length; j++)
                 {
-                    averageStatLine[j] += generatedLine[j];
+                    averageStatLine[j] += generatedLine.GetStatLineArray()[j];
                 }
 
-                statLines.Add(generatedLine);
+                statLines.Add(generatedLine.GetStatLineArray().ToList());
             }
             averageStatLine = averageStatLine.Select(x => x / sampleSize).ToList();
 

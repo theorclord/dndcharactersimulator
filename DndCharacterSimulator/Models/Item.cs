@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DndCharacterSimulator.Models
 {
-    internal class Item
+    public class Item
     {
         public string Name { get; set; }
         public int ProductionCost { get; set; }

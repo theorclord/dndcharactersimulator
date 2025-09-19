@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DndCharacterSimulator.Models
 {
-    internal class City
+    public class City
     {
         public List<PopulationGroup> PopulationGroups {  get; set; }
         public List<Building> Buildings { get; set; }

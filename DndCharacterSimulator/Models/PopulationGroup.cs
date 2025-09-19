@@ -7,7 +7,7 @@ using static DndCharacterSimulator.Models.Race;
 
 namespace DndCharacterSimulator.Models
 {
-    internal class PopulationGroup
+    public class PopulationGroup
     {
         public int Individuals { get; set; }
 

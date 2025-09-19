@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DndCharacterSimulator.Generators
 {
-    internal class CityGeneratorFactory
+    public class CityGeneratorFactory
     {
         public static City GenerateCity(int populationCount, Dictionary<Race.RaceType,int> raceDistribution)
         {

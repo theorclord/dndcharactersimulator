@@ -1,6 +1,6 @@
 ﻿namespace DndCharacterSimulator.Models
 {
-    internal class StatLine
+    public class StatLine
     {
         public int Strength { get; set; }
         public int Dexterity { get; set; }

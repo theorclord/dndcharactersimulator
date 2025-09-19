@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DndCharacterSimulator.Models
 {
-    internal class Race
+    public class Race
     {
         public enum RaceType 
         {
